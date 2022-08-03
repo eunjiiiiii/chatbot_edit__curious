@@ -459,7 +459,7 @@ class Scenario:
                 }
                 '''
 
-            elif pre_result_dict['intent'] in config.SORT_INTENT['PHISICALDISCOMFORT']:
+            elif pre_result_dict['intent'] in config.SORT_INTENT['PHSICALDISCOMFORT']:
 
                 result_dict['state'] = 'POSITIVE'
                 result_dict['answer'] = config.ANSWER['call_caregiver']
