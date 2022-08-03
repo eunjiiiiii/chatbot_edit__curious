@@ -101,7 +101,7 @@ ANSWER = {
 
 SORT_INTENT = {
     'QURIOUS': ['weather', 'dust', 'restaurant', 'travel'],
-    'PHISICALDISCOMFORT' : ['기타활동요구', '욕구표출', '위생활동요구', '환경불편호소', '수면문제호소', '신체불편호소', '이동도움요구', '음식불편호소', '자세변경요구'],
+    'PHSICALDISCOMFORT' : ['기타활동요구', '욕구표출', '위생활동요구', '환경불편호소', '수면문제호소', '신체불편호소', '이동도움요구', '음식불편호소', '자세변경요구'],
     'PHSICALDISCOMFORTnQURIOUS': ['기타활동요구', '욕구표출', '위생활동요구', '환경불편호소', '수면문제호소', '신체불편호소', '이동도움요구', '음식불편호소', '자세변경요구',
                     'weather', 'dust', 'restaurant', 'travel', '궁금함'],
     'SENTIMENTDISCOMFORT': ['마음상태호소']

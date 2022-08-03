@@ -1,4 +1,4 @@
-from scenarios.scenario_class import Scenario
+from scenarios.scenario import Scenario
 import emotionchat_config as config
 #from data.organizer import Organizer
 #from data.preprocessor import Preprocessor
@@ -137,8 +137,8 @@ class ScenarioManager:
 
         else:
         # default_scenario에 없는 시나리오 즉, 넋두리(긍정, 부정일 경우에도 여기에 속함)
-            if intent in ['부정', '긍정']:
-                return scenario.apply_np(tokens, intent, pre_intent, pre_emotions, pre_emotion_prob)
+            if result_dict['intent'] in ['부정', '긍정']:
+                return scenario.apply_np(pre_result_dict, result_dict)
             # (인사일 때)
             elif result_dict['intent'] == '만남인사':
                 # 각 intent 별 시나리오를 demo.scenarios.py에 저장해놨기 때문에 그 시나리오에 기록하면서 사용

@@ -42,7 +42,7 @@ sentimentDiscomfort
 
 from kocrawl.dust import DustCrawler
 from kocrawl.weather import WeatherCrawler
-from scenarios.scenario_class import Scenario
+from scenarios.scenario import Scenario
 from kocrawl.map import MapCrawler
 from answerer.discomfort_answerer import DiscomfortAnswerer
 from answerer.emotion_answerer import EmotionAnswerer

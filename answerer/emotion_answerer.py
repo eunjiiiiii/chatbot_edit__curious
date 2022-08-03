@@ -134,7 +134,7 @@ class EmotionAnswerer(BaseAnswerer):
         return msg
 
 
-    def generate_answer_under5(self, text: str, emotion: str, topic: str) -> str:
+    def generate_answer_under5(self, text: str) -> str:
         """
         DialogKoGPT2이용한 답변 생성 함수
         감정-주제도 명확히 안잡히면서 turn 수도 5회 전에
