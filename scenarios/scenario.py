@@ -182,7 +182,7 @@ class Scenario:
         """
 
         scenario = deepcopy(self.scenario)
-        result = self.__check_entity(result_dict['entity'], result_dict['tokens'], scenario)
+        result = self.__check_entity(result_dict['entity'], result_dict['input'], scenario)
         result = self.__set_default(result)
         required_entity = [k for k, v in result.items() if len(v) == 0]  # 필요한 엔티티 종류
 
