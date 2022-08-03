@@ -1,0 +1,1 @@
+from model.intent_entity.intent_entity import JointIntEnt
