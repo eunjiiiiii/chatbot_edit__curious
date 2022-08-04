@@ -263,7 +263,7 @@ class EmotionChat:
 
         else:
             # 단계 오류 (예상한 단계가 아닐 경우)
-            self.__handle_phase_error(turn_cnt, pre_result_dict, result_dict, text)
+            return self.__handle_phase_error(turn_cnt, pre_result_dict, result_dict, text)
 
         '''
         # 예상한 단계가 아닐 경우에 error 메세지 출력
@@ -557,7 +557,9 @@ class EmotionChat:
         :return: 다 채운 dictionary
         """
 
-        result_dict['input'] = result_dict['input'] + pre_result_dict['input']
+        intent_turn_cnt = result_dict['intent_turn_cnt'] + 1
+        if len(result_dict['input']) != intent_turn_cnt:
+            result_dict['input'] = result_dict['input'] + pre_result_dict['input']
         result_dict['emotions'] = result_dict['emotions'] + pre_result_dict['emotions']
         result_dict['emotion_prob'] = result_dict['emotion_prob'] + pre_result_dict['emotion_prob']
         result_dict['topics'] = result_dict['topics'] + pre_result_dict['topics']
@@ -599,11 +601,9 @@ class EmotionChat:
             if pre_result_dict['intent'] == '만남인사' and result_dict['intent_turn_cnt'] <= 1:
                 # 만남인사 하고 딴소리 하는 경우 -> 1번까지만 봐줌
 
-                result_dict['state'] = 'GREET_UNK'
-                result_dict['answer'] = config.ANSWER['default_error_welcomemsg']
-                result_dict['previous_phase'] = pre_result_dict['current_phase']
-                result_dict['current_phase'] = result_dict['current_phase']
-                result_dict['next_phase'] = pre_result_dict['next_phase']
+                print("만남인사 대화 오류 들어옴")
+
+                #return result_dict
 
                 '''
                 return {
