@@ -285,6 +285,7 @@ class EmotionChat:
             # return self.scenario_manager.apply_scenario(intent, entity, tokens, emotion, topic, intent_turn_cnt)
             return result_dict
 
+
         else:
             # 단계 오류 (예상한 단계가 아닐 경우)
             return self.__handle_phase_error(turn_cnt, pre_result_dict, result_dict, text)

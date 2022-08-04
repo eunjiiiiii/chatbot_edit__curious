@@ -781,8 +781,8 @@ class Scenario:
 
             else:
                 # 1-3. turn 수가 5회 이상일 경우
-                if pre_result_dict['emotion'] == '':
-                    # 3-1. 이전에 확실한 감정이 없었을 경우
+                if result_dict['emotion_prob'][0] < config.EMOTION['threshold']:
+                    # 2-1. 감정확률 < threshold일 경우
 
                     result_dict['emotion'] = pre_result_dict['emotion']
                     result_dict['state'] = 'FAIL'
@@ -813,7 +813,7 @@ class Scenario:
                     '''
 
                 else:
-                    # 3-2. 이전에 확실한 감정이 있었을 경우
+                    # 2-2. 감정확률 >= threshold일 경우
 
                     result_dict['emotion'] = pre_result_dict['emotion']
                     result_dict['state'] = 'SUCCESS'
