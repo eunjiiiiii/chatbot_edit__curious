@@ -112,7 +112,13 @@ for idx in pos:
 
 print('max_emotion_prob: ' + str(max_emotion_prob))
 '''
-
+'''
 import re
 t = '점심은'
 print(re.sub('[은는이가을를]', '', t))
+'''
+
+'''
+list = [None]
+print(list[0])
+'''

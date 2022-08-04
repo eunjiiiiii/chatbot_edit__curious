@@ -568,7 +568,7 @@ class Scenario:
                             #'topic': topic,
                             'topics': [topic] + pre_topics,
                             'topic_prob': [max_topic_prob] + pre_topic_prob,
-                            'answer': EmotionAnswerer().generate_answer_under5(text, emotion, topic),
+                            'answer': EmotionAnswerer().generate_answer_under5(text),
                             'previous_phase': ['/generate_emotion_chat'],
                             'current_phase': '/generate_emotion_chat',
                             'next_phase': ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat', '/recommend_contents', '/end_phase'],
@@ -581,9 +581,7 @@ class Scenario:
 
                         result_dict['emotion'] = pre_result_dict['emotion']
                         result_dict['state'] = 'SUCCESS'
-                        result_dict['answer'] = EmotionAnswerer().generate_answer_under5(text,
-                                                                                         result_dict['emotion'],
-                                                                                         result_dict['topics'][0])
+                        result_dict['answer'] = EmotionAnswerer().generate_answer_under5(text)
                         result_dict['previous_phase'] = pre_result_dict['current_phase']
                         result_dict['current_phase'] = '/generate_emotion_chat'
                         result_dict['next_phase'] = ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat',
@@ -602,7 +600,7 @@ class Scenario:
                             #'topic': topic,
                             'topics': [topic] + pre_topics,
                             'topic_prob': [max_topic_prob] + pre_topic_prob,
-                            'answer': EmotionAnswerer().generate_answer_under5(text, emotion, topic),
+                            'answer': EmotionAnswerer().generate_answer_under5(text),
                             'previous_phase': ['/generate_emotion_chat'],
                             'current_phase': '/generate_emotion_chat',
                             'next_phase': ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat', '/recommend_contents', '/end_phase'],
@@ -634,7 +632,7 @@ class Scenario:
                         #'topic': topic,
                         'topics': [topic] + pre_topics,
                         'topic_prob': [max_topic_prob] + pre_topic_prob,
-                        'answer': EmotionAnswerer().generate_answer_under5(text, emotion, topic),
+                        'answer': EmotionAnswerer().generate_answer_under5(text),
                         'previous_phase': ['/generate_emotion_chat'],
                         'current_phase': '/generate_emotion_chat',
                         'next_phase': ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat', '/recommend_contents', '/end_phase'],
@@ -671,7 +669,7 @@ class Scenario:
                             #'topic': topic,
                             'topics': [topic] + pre_topics,
                             'topic_prob': [max_topic_prob] + pre_topic_prob,
-                            'answer': EmotionAnswerer().generate_answer_under5(text, emotion, topic),
+                            'answer': EmotionAnswerer().generate_answer_under5(text),
                             'previous_phase': ['/generate_emotion_chat'],
                             'current_phase': '/generate_emotion_chat',
                             'next_phase': ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat',

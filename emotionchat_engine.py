@@ -218,38 +218,58 @@ class EmotionChat:
 
 
         # 6. 감정, 주제 라벨 & 확률값 받기
-        emotion_label, emotion_probs_array, max_emotion_prob_array = self.emotion_recognizer().predict(text, wav_file)
-        print('(system msg) emotion_probs_array: ' + str(emotion_probs_array[0]))
-        print('(system msg) max_emotion: ' + str(max_emotion_prob_array))
+        if intent not in ['만남인사','작별인사']:
+            emotion_label, emotion_probs_array, max_emotion_prob_array = self.emotion_recognizer().predict(text,
+                                                                                                           wav_file)
+            print('(system msg) emotion_probs_array: ' + str(emotion_probs_array[0]))
+            print('(system msg) max_emotion: ' + str(max_emotion_prob_array))
 
-        max_emotion_prob = float(max_emotion_prob_array)
-        topic_label, topic_probs_array, max_topic_prob_array = self.topic_recognizer.predict(text)
-        print('(system msg) topic_probs_array: ' + str(topic_probs_array[0]))
-        print('(system msg) max_topic: ' + str(max_topic_prob_array))
-        max_topic_prob = float(max_topic_prob_array)
+            max_emotion_prob = float(max_emotion_prob_array)
+            topic_label, topic_probs_array, max_topic_prob_array = self.topic_recognizer.predict(text)
+            print('(system msg) topic_probs_array: ' + str(topic_probs_array[0]))
+            print('(system msg) max_topic: ' + str(max_topic_prob_array))
+            max_topic_prob = float(max_topic_prob_array)
 
-
-        emotion, topic = self.__rename_emotion_topic(emotion_label, topic_label)
-        print("(system msg) 현재 감정 확률 : " + str(emotion) + str(max_emotion_prob) + " ,현재 주제 확률 : " + str(topic) + str(
-            max_topic_prob))
+            emotion, topic = self.__rename_emotion_topic(emotion_label, topic_label)
+            print(
+                "(system msg) 현재 감정 확률 : " + str(emotion) + str(max_emotion_prob) + " ,현재 주제 확률 : " + str(topic) + str(
+                    max_topic_prob))
 
         ## scenario_manager() > apply_scenario()로 보내기 위해 result_dict로 변수 묶어놓음
-        result_dict = {
-                    'input': tokens,
-                    'intent': intent,
-                    'entity': entity,
-                    'state': 'EMOTIONCHAT_ENGINE',
-                    'emotion': '',
-                    'emotions': [emotion],
-                    'emotion_prob': [max_emotion_prob],
-                    'topics': [topic],
-                    'topic_prob': [max_topic_prob],
-                    'answer': '',
-                    'previous_phase': pre_phase,
-                    'current_phase': '',
-                    'next_phase': [],
-                    'intent_turn_cnt': intent_turn_cnt
-                }
+        if intent in ['만남인사','작별인사']:
+            result_dict = {
+                'input': tokens,
+                'intent': intent,
+                'entity': entity,
+                'state': 'EMOTIONCHAT_ENGINE',
+                'emotion': '',
+                'emotions': [],
+                'emotion_prob': [],
+                'topics': [],
+                'topic_prob': [],
+                'answer': '',
+                'previous_phase': pre_phase,
+                'current_phase': '',
+                'next_phase': [],
+                'intent_turn_cnt': intent_turn_cnt
+            }
+        else:
+            result_dict = {
+                        'input': tokens,
+                        'intent': intent,
+                        'entity': entity,
+                        'state': 'EMOTIONCHAT_ENGINE',
+                        'emotion': '',
+                        'emotions': [emotion],
+                        'emotion_prob': [max_emotion_prob],
+                        'topics': [topic],
+                        'topic_prob': [max_topic_prob],
+                        'answer': '',
+                        'previous_phase': pre_phase,
+                        'current_phase': '',
+                        'next_phase': [],
+                        'intent_turn_cnt': intent_turn_cnt
+                    }
 
         # 7. scenario_manager의 apply_scenario() 실행
         result_dict = self.scenario_manager.apply_scenario(pre_result_dict, result_dict,
@@ -364,7 +384,7 @@ class EmotionChat:
                             #'topic': '',
                             'topics': [topic] + pre_topics,
                             'topic_prob': [max_topic_prob] + pre_topic_prob,
-                            'answer': EmotionAnswerer().generate_answer_under5(text, emotion, topic),
+                            'answer': EmotionAnswerer().generate_answer_under5(text),
                             'previous_phase': ['/recognize_emotion_chat', '/other_user'],
                             'current_phase': '/generate_emotion_chat',
                             'next_phase': ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat',
@@ -448,7 +468,7 @@ class EmotionChat:
                         #'topic': topic,
                         'topics': [topic] + pre_topics,
                         'topic_prob': [max_topic_prob] + pre_topic_prob,
-                        'answer': EmotionAnswerer().generate_answer_under5(text, emotion, topic),
+                        'answer': EmotionAnswerer().generate_answer_under5(text),
                         'previous_phase': ['/recognize_emotion_chat'],
                         'current_phase': '/generate_emotion_chat',
                         'next_phase': ['/generate_emotion_chat', '/recognize_emotion_chat', '/recommend_contents',
@@ -829,7 +849,7 @@ class EmotionChat:
                     # 'topic': topic,
                     'topics': [topic] + pre_topics,
                     'topic_prob': [max_topic_prob] + pre_topic_prob,
-                    'answer': EmotionAnswerer().generate_answer_under5(text, emotion, topic),
+                    'answer': EmotionAnswerer().generate_answer_under5(text),
                     'previous_phase': ['/recognize_emotion_chat'],
                     'current_phase': '/generate_emotion_chat',
                     'next_phase': ['/generate_emotion_chat', '/recognize_emotion_chat', '/recommend_contents',
