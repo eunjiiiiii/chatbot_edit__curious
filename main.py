@@ -61,6 +61,7 @@ if __name__ == '__main__':
         'emotion': '',
         'emotions': [],
         'emotion_prob': [],
+        'emotion_probs': [],
         'topics': [],
         'topic_prob': [],
         'answer': '',

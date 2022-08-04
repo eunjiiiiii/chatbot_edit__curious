@@ -52,13 +52,29 @@ class ScenarioManager:
                     # 이전 단계가 check_ucs 였을 경우
                     #if result_dict['emotions'][0] in config.EMOTION['긍정']:
                        ## 현재 감정이 긍정에 속하는 감정일 경우
+
+                    result_dict['input'] = result_dict['input']+ pre_result_dict['input']
+                    result_dict['emotion'] = pre_result_dict['emotion']
+                    result_dict['emotions'] = result_dict['emotions'] + pre_result_dict['emotions']
+                    result_dict['emotion_prob'] = result_dict['emotion_prob'] + pre_result_dict['emotion_prob']
+                    result_dict['topics'] = result_dict['topics'] + pre_result_dict['topics']
+                    result_dict['topic_prob'] = result_dict['topic_prob'] + pre_result_dict['topic_prob']
+                    result_dict['state'] = 'END'
+                    result_dict['answer'] = config.ANSWER['goodbyemsg_uc']
+                    result_dict['previous_phase'] = ['/welcomemsg_chat', '/other_user']
+                    result_dict['previous_phase'] = '/end_phase'
+                    result_dict['previous_phase'] = ['/end_phase']
+
+                    '''
                     return {
+                        # 수정
                         'input': result_dict['input']+ pre_result_dict['input'],
                         'intent': result_dict['intent'],
                         'entity': result_dict['entity'],
                         'emotion': pre_result_dict['emotion'],
                         'emotions': result_dict['emotions'] + pre_result_dict['emotions'],  # 'emotions': [pre_emotion] + pre_emotions,
                         'emotion_prob': result_dict['emotion_prob'] + pre_result_dict['emotion_prob'],
+                        'emotion_probs': result_dict['emotion_probs'],
                         'topics': result_dict['topics'] + pre_result_dict['topics'],  # 'topics': [topic] + pre_topics,
                         'topic_prob': result_dict['topic_prob'] + pre_result_dict['topic_prob'],  # 'topic_prob': [0] + pre_topic_prob,
                         'state': 'END',
@@ -68,6 +84,7 @@ class ScenarioManager:
                         'next_phase': ['/end_phase'],
                         'intent_turn_cnt': result_dict['intent_turn_cnt']
                     }
+                    '''
 
                     '''
                     else:
