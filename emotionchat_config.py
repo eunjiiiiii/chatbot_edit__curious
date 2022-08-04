@@ -153,6 +153,19 @@ PRED_PHASE = {
     '/end_phase': ['/end_phase']   # ok
 }
 
+STATE = ['SUCCESS', 'FAIL', # 엔티티, 감정 인식에 성공
+         'REQUIRE_EMOTION', # 여태까지 확실한 감정이 안나왔을 경우
+         'REQUIRE_ENTITY',  # 여태까지 default_scenario에 있는 필수 엔티티를 채우지 않았을 경우
+         'SUDDEN_GOODBYE',  # 갑자기 인텐트 작별인사가 뜬 경우
+         'OVER_TURN_5', # 전체 turn_cnt>=5 여서 종료되는 경우
+         'FAIL_FILLING_SLOT',   # intent_turn_cnt >=5 인데 엔티티 인식에 실패했을 경우
+         'POSITIVE', 'NEGATIVE',    # 이전 대화 단계가 '/check_ucs'인데 현재 인텐트 '긍정', '부정'이 나왔을 경우
+         'UNK', # intent가 UNK로 인식됐을 경우
+         'REQUIRE_CERTAIN_EMOTION'  # 이전에 확실한 감정이 하나 있었는데 intent_turn_cnt <=1 이거나, 마음상태호소 대화이다가 인텐트 부정,긍정으로 나올 경우  
+         'NOT_RECOGNIZE_UC' # 불,궁을 인식하지 않은 상태로 현재 인텐트 '긍정', '부정'이 나왔을 경우,
+         'ERROR_INTENT' # 그 외에 에러처리(인텐트 인식 잘못했을 경우)
+         ]
+
 EMOTION = {
     'threshold': 0.75,
     '긍정': ['평온함',' 기쁨'],

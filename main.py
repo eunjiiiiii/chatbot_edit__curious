@@ -106,7 +106,17 @@ if __name__ == '__main__':
         # turn_cnt 1 증가
         turn_cnt += 1
 
+        print("**************\n\n")
 
+        print("Bot : ")
+        for i in range(len(result_dict['answer'])):
+            print(result_dict['answer'][i])
+        #print("Bot : " + str(result_dict['answer']))
+
+        print("-" * 100 + "\n\n")
+
+
+        '''
         print("\n\n*******시나리오 check*******")
         print("이전 인텐트 : " + str(conversation_history[turn_cnt-1]['intent']))
         print("현재 인텐트 : " + str(result_dict['intent']) + '\n') #
@@ -121,13 +131,9 @@ if __name__ == '__main__':
         print("pre_topics: " + str(result_dict['topics']))
         print("pre_topic_prob: " + str(result_dict['topic_prob']))
         print('turn_cnt: ' + str(turn_cnt)) # run()함수로 넘어가는 turn_cnt
+        '''
 
 
-        print("**************\n\n")
-
-        print("Bot : " + str(result_dict['answer']))
-
-        print("-" * 100 + "\n\n")
 
         '''
         pre_phase = result_dict['current_phase']

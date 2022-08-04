@@ -48,7 +48,7 @@ class ScenarioManager:
             # default_scenario 에 있는 경우 default_scenario를 기본적으로 따르도록
             if c_ucs:
                 # 이전 단계에서 불,궁,감 대화에 들어왔으면
-                if pre_result_dict['phase'] == '/check_ucs':
+                if pre_result_dict['current_phase'] == '/check_ucs':
                     # 이전 단계가 check_ucs 였을 경우
                     #if result_dict['emotions'][0] in config.EMOTION['긍정']:
                        ## 현재 감정이 긍정에 속하는 감정일 경우
@@ -95,12 +95,12 @@ class ScenarioManager:
                     return scenario.apply(pre_result_dict, result_dict)
 
 
-                elif (scenario.intent == pre_result_dict['intent']) and pre_result_dict['intent'] in config.SORT_INTENT['SENTIMENTDISCOMFORT']:
+                elif (scenario.intent == pre_result_dict['intent']) and pre_result_dict['intent'] == '마음상태호소':
                     # 이전 단계에서 감정 대화였으면
                     return scenario.apply_emotion(pre_result_dict, result_dict, text, turn_cnt)
 
                 else:
-                    raise Exception('<불편함, 궁금함, 넋두리, 감정 대화 중 어느 것인가?>의 분기문이 잘못되었습니다.')
+                    continue
 
             ############################# #############################
             else:
@@ -136,12 +136,14 @@ class ScenarioManager:
             #############################  #############################
 
         else:
+            print("(system msg) scenario 반복문 빠져나옴")
         # default_scenario에 없는 시나리오 즉, 넋두리(긍정, 부정일 경우에도 여기에 속함)
             if result_dict['intent'] in ['부정', '긍정']:
                 return scenario.apply_np(pre_result_dict, result_dict)
             # (인사일 때)
             elif result_dict['intent'] == '만남인사':
                 # 각 intent 별 시나리오를 demo.scenarios.py에 저장해놨기 때문에 그 시나리오에 기록하면서 사용
+                print("(system msg) scenario 반복문 빠져나옴")
                 return scenario.apply_greet(pre_result_dict, result_dict)
             # (UNK일 때)
             else:

@@ -160,7 +160,7 @@ class Scenario:
             result[k] = ' '.join(result[k])
         return result
 
-    def __set_default_result_dict(self, pre_result_dict, result_dict) -> dict:
+    def set_default_result_dict(self, pre_result_dict, result_dict) -> dict:
         """
         result_dict(다 채워진 시나리오)의 default form 설정 함수
         :param reuslt_dict: 현재 result_dict
@@ -190,7 +190,7 @@ class Scenario:
         print("(system msg) required_entity : " + str(required_entity))
 
         # result_dict default form setting
-        self.__set_default_result_dict(pre_result_dict, result_dict)
+        self.set_default_result_dict(pre_result_dict, result_dict)
 
         if len(required_entity) == 0:
             # entity가 채워진 경우
@@ -359,7 +359,7 @@ class Scenario:
         """
 
         # result_dict default form setting
-        self.__set_default_result_dict(pre_result_dict, result_dict)
+        self.set_default_result_dict(pre_result_dict, result_dict)
 
         result_dict['state'] = 'GREET_UNK'
         result_dict['answer'] = config.ANSWER['default_error_welcomemsg']
@@ -397,7 +397,7 @@ class Scenario:
         """
 
         # result_dict default form setting
-        self.__set_default_result_dict(pre_result_dict, result_dict)
+        self.set_default_result_dict(pre_result_dict, result_dict)
 
         if result_dict['intent'] == '부정':
 
@@ -432,6 +432,7 @@ class Scenario:
             # 긍정
             if pre_result_dict['intent'] == '마음상태호소':
 
+                result_dict['emotion'] = pre_result_dict['emotion']
                 result_dict['state'] = 'POSITIVE'
                 result_dict['answer'] = config.ANSWER['default_contents']
                 result_dict['previous_phase'] = pre_result_dict['current_phase']
@@ -461,6 +462,7 @@ class Scenario:
 
             elif pre_result_dict['intent'] in config.SORT_INTENT['PHSICALDISCOMFORT']:
 
+                result_dict['emotion'] = pre_result_dict['emotion']
                 result_dict['state'] = 'POSITIVE'
                 result_dict['answer'] = config.ANSWER['call_caregiver']
                 result_dict['previous_phase'] = pre_result_dict['current_phase']
@@ -490,6 +492,7 @@ class Scenario:
 
             else:
 
+                result_dict['emotion'] = pre_result_dict['emotion']
                 result_dict['state'] = 'UNK'
                 result_dict['answer'] = '그러시군요. ' + config.ANSWER['default_error_end']
                 result_dict['previous_phase'] = pre_result_dict['current_phase']
@@ -530,7 +533,7 @@ class Scenario:
         """
 
         # result_dict default form setting
-        self.__set_default_result_dict(pre_result_dict, result_dict)
+        self.set_default_result_dict(pre_result_dict, result_dict)
 
 
         if turn_cnt < 5:
@@ -882,6 +885,7 @@ class Scenario:
                 else:
                     # 현재 감정이 threshold를 넘지 않았을 경우
 
+                    result_dict['emotion'] = pre_result_dict['emotion']
                     result_dict['state'] = 'FAIL'
                     result_dict['answer'] = EmotionAnswerer().generate_answer_over5(pre_result_dict['emotions'])
                     result_dict['previous_phase'] = pre_result_dict['current_phase']
