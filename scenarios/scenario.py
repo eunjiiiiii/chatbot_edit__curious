@@ -965,13 +965,14 @@ class Scenario:
             result_dict['current_phase'] = '/end_phase'
             result_dict['next_phase'] = ['/end_phase']
 
-            return result_dict
+           
 
-        result_dict['state'] = 'UNK'
-        result_dict['answer'] = config.ANSWER['default_error_ucs']
-        result_dict['previous_phase'] = pre_result_dict['current_phase']
-        result_dict['current_phase'] = '/unk'
-        result_dict['next_phase'] = ['/other_user', '/recognize_uc_chat', '/recognize_emotion_chat', '/recognize_uc',
+        else:
+            result_dict['state'] = 'UNK'
+            result_dict['answer'] = config.ANSWER['default_error_ucs']
+            result_dict['previous_phase'] = pre_result_dict['current_phase']
+            result_dict['current_phase'] = '/unk'
+            result_dict['next_phase'] = ['/other_user', '/recognize_uc_chat', '/recognize_emotion_chat', '/recognize_uc',
                                '/recognize_emotion', '/recognize_topic', '/generate_emotion_chat', '/check_ucs',
                                '/fill_slot', '/end_phase']
 
