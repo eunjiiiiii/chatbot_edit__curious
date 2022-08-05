@@ -410,8 +410,7 @@ class Scenario:
             result_dict['next_phase'] = ['/end_phase']
 
             return result_dict
-
-            '''
+           '''
             return {
                 'input': result_dict['inputs'] + pre_result_dict['inputs'],
                 'intent': result_dict['intent'],
@@ -956,6 +955,17 @@ class Scenario:
 
         # result_dict default form setting
         self.set_default_result_dict(pre_result_dict, result_dict)
+
+
+        if result_dict['intent_turn_cnt'] >= 5:
+
+            result_dict['state'] = 'over_turn_5'
+            result_dict['answer'] = config.ANSWER['default_error_end']
+            result_dict['previous_phase'] = pre_result_dict['current_phase']
+            result_dict['current_phase'] = '/end_phase'
+            result_dict['next_phase'] = ['/end_phase']
+
+            return result_dict
 
         result_dict['state'] = 'UNK'
         result_dict['answer'] = config.ANSWER['default_error_ucs']
