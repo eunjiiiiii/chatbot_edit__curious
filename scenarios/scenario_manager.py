@@ -44,7 +44,6 @@ class ScenarioManager:
             result_dict['intent'] = result_dict['intent'] + '_' + intent  # 궁금함_dust
             result_dict['entity'] = entity
         '''
-
         for scenario in self.scenarios:
             # default_scenario 에 있는 경우 default_scenario를 기본적으로 따르도록
             if c_ucs:
@@ -108,7 +107,7 @@ class ScenarioManager:
                         }
                     '''
 
-                elif (scenario.intent == pre_result_dict['intent']) and (pre_result_dict['intent'] in config.SORT_INTENT['PHSICALDISCOMFORT']):
+                elif (scenario.intent == pre_result_dict['intent']) and (pre_result_dict['intent'] in config.SORT_INTENT['PHISICALDISCOMFORT']):
                     # 이전 단계에서 불편함 대화였으면
                     return scenario.apply(pre_result_dict, result_dict)
 
@@ -138,7 +137,7 @@ class ScenarioManager:
                 '''
 
                 # (불궁일 때)현재 대화의 scenario의 intent랑 들어온 인텐트가 같으면 default_scenario대로 수행하게
-                if (scenario.intent == result_dict['intent']) and (result_dict['intent'] in config.SORT_INTENT['PHSICALDISCOMFORT']):
+                if (scenario.intent == result_dict['intent']) and (result_dict['intent'] in config.SORT_INTENT['PHISICALDISCOMFORT']):
                 # 각 intent 별 시나리오를 demo.scenarios.py에 저장해놨기 때문에 그 시나리오에 기록하면서 사용
                     print('(system msg) 엔티티 : ' + str(result_dict['entity']))
                     return scenario.apply(pre_result_dict, result_dict)
@@ -165,8 +164,6 @@ class ScenarioManager:
                 return scenario.apply_greet(pre_result_dict, result_dict)
             # (UNK일 때)
             else:
-                #result_dict['current_phase'] = '/UNK'
-                #return result_dict
                 return scenario.apply_unk(pre_result_dict, result_dict)  # apply_unk() 생성 예정
 
         '''

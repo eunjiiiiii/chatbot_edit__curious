@@ -114,7 +114,7 @@ class EmotionChat:
         # 1. 불편함/궁금함 인식 ,감정인식/주제인식 일 경우 intent 인식하지 않음
         c_ucs = True    # 이전 단계에서 불,궁,감 대화에 들어왔는가?
         if pre_phase == '' and pre_intent not in (
-                config.SORT_INTENT['PHSICALDISCOMFORTnQURIOUS'] + config.SORT_INTENT['SENTIMENTDISCOMFORT']):
+                config.SORT_INTENT['PHISICALDISCOMFORTnQURIOUS'] + config.SORT_INTENT['SENTIMENTDISCOMFORT']):
             # 이전 단계가 불편함, 마음상태호소, 궁금함 X -> 인텐트 인식
             intent, entity_ = self.intent_entity_classifier(text)
         elif '/check_ucs' in pre_pred_phases:
@@ -138,6 +138,7 @@ class EmotionChat:
 
         # 이전 대화의 intent와 현재 대화의 intent가 같으면 intent_turn_cnt 기록
         if pre_intent == intent:
+
             intent_turn_cnt += 1
 
         elif pre_intent != intent:
@@ -164,7 +165,7 @@ class EmotionChat:
                 'emotion': '',
                 'emotions': pre_emotions,
                 'emotion_prob': pre_emotion_prob,
-                'emotion_probs': [0.,0.,0.,0.,0.,0.],
+                'emotion_probs': [1., 1., 1., 1., 1., 1.],
                 #'topic': '',
                 'topics': pre_topics,
                 'topic_prob': pre_topic_prob,
@@ -188,7 +189,7 @@ class EmotionChat:
                 'emotion': '',
                 'emotions': pre_emotions,
                 'emotion_prob': pre_emotion_prob,
-                'emotion_probs': [0., 0., 0., 0., 0., 0.],
+                'emotion_probs': [1., 1., 1., 1., 1., 1.],
                 #'topic': '',
                 'topics': pre_topics,
                 'topic_prob': pre_topic_prob,
@@ -247,7 +248,7 @@ class EmotionChat:
                 'emotion': '',
                 'emotions': [],
                 'emotion_prob': [],
-                'emotion_probs': [0., 0., 0., 0., 0., 0.],
+                'emotion_probs': [1., 1., 1., 1., 1., 1.],
                 'topics': [],
                 'topic_prob': [],
                 'answer': '',
@@ -284,7 +285,6 @@ class EmotionChat:
         if self.__check_phase(pre_pred_phases, result_dict['current_phase']):
             # return self.scenario_manager.apply_scenario(intent, entity, tokens, emotion, topic, intent_turn_cnt)
             return result_dict
-
 
         else:
             # 단계 오류 (예상한 단계가 아닐 경우)

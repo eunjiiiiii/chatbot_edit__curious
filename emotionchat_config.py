@@ -75,7 +75,7 @@ API = {
 ANSWER = {
     # 고정된 만남 안내 메세지
     'welcomemsg_chat' : ['안녕하세요. 저는 {HUMAN_NAME}님의 \n심리 상담을 도와드릴 {BOT_NAME} 입니다.\n'.format(HUMAN_NAME=human_name, BOT_NAME=bot_name),
-                        '상담 시작 전, 스피커 음량을 확인해 주세요.\n{BOT_NAME}이 문자와 소리 모두 제공합니다.\n',
+                        '상담 시작 전, 스피커 음량을 확인해 주세요.\n{BOT_NAME}이 문자와 소리 모두 제공합니다.\n'.format(BOT_NAME=bot_name),
                          '답변은 음성과 텍스트 모두 사용하실 수 있어요.\n',
                          '자 이제 심리상담을 시작할게요. \n오늘 기분이나 마음이 어떠세요?\n[말하기] 버튼을 터치하시면 말씀하실 수 있어요.\n'],
     # 간병인 호출
@@ -101,8 +101,8 @@ ANSWER = {
 
 SORT_INTENT = {
     'QURIOUS': ['weather', 'dust', 'restaurant', 'travel'],
-    'PHSICALDISCOMFORT' : ['기타활동요구', '욕구표출', '위생활동요구', '환경불편호소', '수면문제호소', '신체불편호소', '이동도움요구', '음식불편호소', '자세변경요구'],
-    'PHSICALDISCOMFORTnQURIOUS': ['기타활동요구', '욕구표출', '위생활동요구', '환경불편호소', '수면문제호소', '신체불편호소', '이동도움요구', '음식불편호소', '자세변경요구',
+    'PHISICALDISCOMFORT' : ['기타활동요구', '욕구표출', '위생활동요구', '환경불편호소', '수면문제호소', '신체불편호소', '이동도움요구', '음식불편호소', '자세변경요구'],
+    'PHISICALDISCOMFORTnQURIOUS': ['기타활동요구', '욕구표출', '위생활동요구', '환경불편호소', '수면문제호소', '신체불편호소', '이동도움요구', '음식불편호소', '자세변경요구',
                     'weather', 'dust', 'restaurant', 'travel', '궁금함'],
     'SENTIMENTDISCOMFORT': ['마음상태호소']
 }
