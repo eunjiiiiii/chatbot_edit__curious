@@ -21,7 +21,7 @@ class ScenarioManager:
         self.intent_dict = {'날씨': 1, '미세먼지': 3}
         self.embed_processor = GensimEmbedder(model=embed.FastText())
         self.intent_classifier = DistanceClassifier(model=curious_intent.CNN(self.intent_dict),
-                                                    loss=CenterLoss(self.intent_dict),)
+                                                    loss=CenterLoss(self.intent_dict))
         self.entity_recognizer = EntityRecognizer(model=curious_entity.LSTM(self.dataset.entity_dict),
                                                   loss=CRFLoss(self.dataset.entity_dict))
 
@@ -33,7 +33,7 @@ class ScenarioManager:
             raise Exception('시나리오 객체만 입력 가능합니다.')
 
     def apply_scenario(self, pre_result_dict, result_dict, text, c_ucs, turn_cnt):
-
+        '''
         if result_dict['intent'] == '궁금함':
             # 현재 대화가 궁금함 대화일 경우
             print('(system msg) intent 궁금함 들어옴')
@@ -43,6 +43,7 @@ class ScenarioManager:
             print('(system msg) intent : ' + str(intent))
             result_dict['intent'] = result_dict['intent'] + '_' + intent  # 궁금함_dust
             result_dict['entity'] = entity
+        '''
 
         for scenario in self.scenarios:
             # default_scenario 에 있는 경우 default_scenario를 기본적으로 따르도록
@@ -164,7 +165,9 @@ class ScenarioManager:
                 return scenario.apply_greet(pre_result_dict, result_dict)
             # (UNK일 때)
             else:
-                return scenario.apply_unk(pre_result_dict, result_dict, turn_cnt)  # apply_unk() 생성 예정
+                #result_dict['current_phase'] = '/UNK'
+                #return result_dict
+                return scenario.apply_unk(pre_result_dict, result_dict)  # apply_unk() 생성 예정
 
         '''
         # 넋두리(모름)일 때

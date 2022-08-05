@@ -945,3 +945,24 @@ class Scenario:
                     'intent_turn_cnt': intent_turn_cnt
                 }
                 '''
+
+    def apply_unk(self, pre_result_dict: dict, result_dict: dict) -> dict:
+        """
+         넋두리
+        :param pre_result_dict: 이전 단계 result_dict
+        :param result_dict: 다 안채워진 현재 단계 result_dict
+        :return: 다 채워진 시나리오
+        """
+
+        # result_dict default form setting
+        self.set_default_result_dict(pre_result_dict, result_dict)
+
+        result_dict['state'] = 'UNK'
+        result_dict['answer'] = config.ANSWER['default_error_ucs']
+        result_dict['previous_phase'] = pre_result_dict['current_phase']
+        result_dict['current_phase'] = '/unk'
+        result_dict['next_phase'] = ['/other_user', '/recognize_uc_chat', '/recognize_emotion_chat', '/recognize_uc',
+                               '/recognize_emotion', '/recognize_topic', '/generate_emotion_chat', '/check_ucs',
+                               '/fill_slot', '/end_phase']
+
+        return result_dict
