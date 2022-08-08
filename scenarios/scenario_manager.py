@@ -15,15 +15,38 @@ class ScenarioManager:
     불,궁,감,모름을 구분해 각각 다른 시나리오를 적용함.
     """
 
-    def __init__(self):
+    def __init__(self,
+                 embed_processor,
+                 intent_classifier,
+                 entity_recognizer):
+
         self.scenarios = []
         self.dataset = Dataset(ood=True)
         self.intent_dict = {'날씨': 1, '미세먼지': 3}
-        self.embed_processor = GensimEmbedder(model=embed.FastText())
-        self.intent_classifier = DistanceClassifier(model=curious_intent.CNN(self.intent_dict),
-                                                    loss=CenterLoss(self.intent_dict))
-        self.entity_recognizer = EntityRecognizer(model=curious_entity.LSTM(self.dataset.entity_dict),
-                                                  loss=CRFLoss(self.dataset.entity_dict))
+
+        self.embed_processor = embed_processor[0] \
+            if isinstance(embed_processor, tuple) \
+            else embed_processor
+
+        self.intent_classifier = intent_classifier[0] \
+            if isinstance(intent_classifier, tuple) \
+            else intent_classifier
+
+        self.entity_recognizer = entity_recognizer[0] \
+            if isinstance(entity_recognizer, tuple) \
+            else entity_recognizer
+
+        if isinstance(embed_processor, tuple) \
+                and len(embed_processor) == 2 and embed_processor[1] is True:
+            self.__fit_embed()
+
+        if isinstance(intent_classifier, tuple) \
+                and len(intent_classifier) == 2 and intent_classifier[1] is True:
+            self.__fit_intent()
+
+        if isinstance(entity_recognizer, tuple) \
+                and len(entity_recognizer) == 2 and entity_recognizer[1] is True:
+            self.__fit_entity()
 
 
     def add_scenario(self, scen: Scenario):
@@ -44,6 +67,7 @@ class ScenarioManager:
             result_dict['intent'] = result_dict['intent'] + '_' + intent  # 궁금함_dust
             result_dict['entity'] = entity
         '''
+
         for scenario in self.scenarios:
             # default_scenario 에 있는 경우 default_scenario를 기본적으로 따르도록
             if c_ucs:
@@ -111,6 +135,15 @@ class ScenarioManager:
                     # 이전 단계에서 불편함 대화였으면
                     return scenario.apply(pre_result_dict, result_dict)
 
+                elif (scenario.intent == pre_result_dict['intent']) and (pre_result_dict['intent'] in config.SORT_INTENT['QURIOUS']):
+                    # 이전 단계에서 궁금함 대화였으면
+                    prep = self.dataset.load_predict(text, self.embed_processor)
+                    #intent = self.intent_classifier.predict(prep, calibrate=False)
+                    entity = self.entity_recognizer.predict(prep)
+                    #print('(system msg) intent : ' + str(intent))
+                    #result_dict['intent'] = intent    # 궁금함_dust
+                    result_dict['entity'] = entity
+                    return scenario.apply(pre_result_dict, result_dict)
 
                 elif (scenario.intent == pre_result_dict['intent']) and pre_result_dict['intent'] == '마음상태호소':
                     # 이전 단계에서 감정 대화였으면
@@ -123,21 +156,20 @@ class ScenarioManager:
             else:
                 # 이전 대화에서 불,궁,감 대화에 안들어왔으면
                 # 다른 인텐트 존재 가능
-                '''
+
                 if result_dict['intent'] == '궁금함':
                     # 현재 대화가 궁금함 대화일 경우
-                    print('(system msg) intent 궁금함 들어옴')
                     prep = self.dataset.load_predict(text, self.embed_processor)
                     intent = self.intent_classifier.predict(prep, calibrate=False)
                     entity = self.entity_recognizer.predict(prep)
                     print('(system msg) intent : ' + str(intent))
-                    result_dict['intent'] = result_dict['intent'] + '_' + intent    # 궁금함_dust
+                    result_dict['intent'] = intent    # 궁금함_dust
                     result_dict['entity'] = entity
                     return scenario.apply(pre_result_dict, result_dict)
-                '''
+
 
                 # (불궁일 때)현재 대화의 scenario의 intent랑 들어온 인텐트가 같으면 default_scenario대로 수행하게
-                if (scenario.intent == result_dict['intent']) and (result_dict['intent'] in config.SORT_INTENT['PHISICALDISCOMFORT']):
+                elif (scenario.intent == result_dict['intent']) and (result_dict['intent'] in config.SORT_INTENT['PHISICALDISCOMFORT']):
                 # 각 intent 별 시나리오를 demo.scenarios.py에 저장해놨기 때문에 그 시나리오에 기록하면서 사용
                     print('(system msg) 엔티티 : ' + str(result_dict['entity']))
                     return scenario.apply(pre_result_dict, result_dict)

@@ -29,6 +29,8 @@ class TorchProcessor(BaseProcessor):
 
         :param model: Pytorch 모델을 입력해야합니다.
         """
+        ctx = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = torch.device(ctx)
 
         super().__init__(model)
         self.visualizer = Visualizer(self.model_dir, self.model_file)
@@ -106,7 +108,7 @@ class TorchProcessor(BaseProcessor):
 
         if not self.model_loaded:
             self.model_loaded = True
-            self.model.load_state_dict(torch.load(self.model_file + '.pth'))
+            self.model.load_state_dict(torch.load(self.model_file + '.pth', map_location=self.device))
 
     def _save_model(self):
         """

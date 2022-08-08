@@ -41,7 +41,6 @@ class Scenario:
 
         self.emotion_answerer = EmotionAnswerer()
 
-
     def __check_api(self, api):
 
         """
@@ -549,7 +548,9 @@ class Scenario:
                         # 3-1. 이전에 확실한 감정이 없었을 경우
 
                         result_dict['state'] = 'REQUIRE_CERTAIN_EMOTION'
-                        result_dict['answer'] = self.emotion_answerer.generate_answer_under5(text)
+                        result_dict['answer'] = self.emotion_answerer.generate_answer_under5(text,
+                                                                                         result_dict['emotions'][0],
+                                                                                         result_dict['topics'][0])
                         result_dict['previous_phase'] = pre_result_dict['current_phase']
                         result_dict['current_phase'] = '/generate_emotion_chat'
                         result_dict['next_phase'] = ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat',
@@ -648,7 +649,9 @@ class Scenario:
                         # 3-1. 이전에 확실한 감정이 없었을 경우
 
                         result_dict['state'] = 'REQUIRE_CERTAIN_EMOTION'
-                        result_dict['answer'] = self.emotion_answerer.generate_answer_under5(text)
+                        result_dict['answer'] = self.emotion_answerer.generate_answer_under5(text,
+                                                                                         result_dict['emotions'][0],
+                                                                                         result_dict['topics'][0])
                         result_dict['previous_phase'] = pre_result_dict['current_phase']
                         result_dict['current_phase'] = '/generate_emotion_chat'
                         result_dict['next_phase'] = ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat',
@@ -779,7 +782,7 @@ class Scenario:
 
             else:
                 # 1-3. turn 수가 5회 이상일 경우
-                if pre_result_dict['emotion'] == config.EMOTION['threshold']:
+                if result_dict['emotion_prob'][0] < config.EMOTION['threshold']:
                     # 2-1. 감정확률 < threshold일 경우
 
                     result_dict['emotion'] = pre_result_dict['emotion']
@@ -955,19 +958,25 @@ class Scenario:
         # result_dict default form setting
         self.set_default_result_dict(pre_result_dict, result_dict)
 
-        if result_dict["intent_turn_cnt"] >= 5:
+        if result_dict['intent_turn_cnt'] >= 5:
+
             result_dict['state'] = 'over_turn_5'
             result_dict['answer'] = config.ANSWER['default_error_end']
             result_dict['previous_phase'] = pre_result_dict['current_phase']
             result_dict['current_phase'] = '/end_phase'
             result_dict['next_phase'] = ['/end_phase']
+
+
+
         else:
             result_dict['state'] = 'UNK'
             result_dict['answer'] = config.ANSWER['default_error_ucs']
             result_dict['previous_phase'] = pre_result_dict['current_phase']
             result_dict['current_phase'] = '/unk'
-            result_dict['next_phase'] = ['/other_user', '/recognize_uc_chat', '/recognize_emotion_chat', '/recognize_uc',
-                                         '/recognize_emotion', '/recognize_topic', '/generate_emotion_chat', '/check_ucs',
+            result_dict['next_phase'] = ['/other_user', '/recognize_uc_chat', '/recognize_emotion_chat',
+                                         '/recognize_uc',
+                                         '/recognize_emotion', '/recognize_topic', '/generate_emotion_chat',
+                                         '/check_ucs',
                                          '/fill_slot', '/end_phase']
 
         return result_dict
