@@ -41,6 +41,7 @@ class Organizer:
         return intent_dict
 
     def organize_entity(self) -> dict:
+
         """
         여러 파일을 모아서 하나의 엔티티 데이터 파일로 만듭니다.
         파일 저장 이후에 학습에 사용되는 딕셔너리를 만들고 반환합니다.
