@@ -48,9 +48,13 @@ from answerer.discomfort_answerer import DiscomfortAnswerer
 from answerer.emotion_answerer import EmotionAnswerer
 
 
+answerer = EmotionAnswerer()
+
+
 weather = Scenario(
     intent='weather',
     api=WeatherCrawler().request,
+    emotion_answerer=answerer,
     scenario={
         'LOCATION': [],
         'DATE': ['오늘']
@@ -60,6 +64,7 @@ weather = Scenario(
 dust = Scenario(
     intent='dust',
     api=DustCrawler().request,
+    emotion_answerer=answerer,
     scenario={
         'LOCATION': [],
         'DATE': ['오늘']
@@ -72,6 +77,7 @@ dust = Scenario(
 physicalDiscomfort = Scenario(
     intent='신체불편호소',
     api=DiscomfortAnswerer().physicalDiscomfort_check_form,
+    emotion_answerer=answerer,
     scenario={
         'BODY': [],
         'SYMPTOM': ['']
@@ -81,6 +87,7 @@ physicalDiscomfort = Scenario(
 sleepProblem = Scenario(
     intent='수면문제호소',
     api=DiscomfortAnswerer().sleepProblem_check_form,
+    emotion_answerer=answerer,
     scenario={
     }
 )
@@ -88,6 +95,7 @@ sleepProblem = Scenario(
 moveHelp = Scenario(
     intent='이동도움요구',
     api=DiscomfortAnswerer().moveHelp_check_form,
+    emotion_answerer=answerer,
     scenario={
         'PLACE': []
     }
@@ -96,6 +104,7 @@ moveHelp = Scenario(
 changePosture = Scenario(
     intent='자세변경요구',
     api=DiscomfortAnswerer().changePosture_check_form,
+    emotion_answerer=answerer,
     scenario={
     }
 )
@@ -103,6 +112,7 @@ changePosture = Scenario(
 higieneAct = Scenario(
     intent='위생활동요구',
     api=DiscomfortAnswerer().higieneAct_check_form,
+    emotion_answerer=answerer,
     scenario={
     }
 )
@@ -110,6 +120,7 @@ higieneAct = Scenario(
 otherAct = Scenario(
     intent='기타활동요구',
     api=DiscomfortAnswerer().otherAct_check_form,
+    emotion_answerer=answerer,
     scenario={
     }
 )
@@ -117,6 +128,7 @@ otherAct = Scenario(
 environmentalDiscomfort = Scenario(
     intent='환경불편호소',
     api=DiscomfortAnswerer().environmentalDiscomfort_check_form,
+    emotion_answerer=answerer,
     scenario={
         'PLACE': []
     }
@@ -125,6 +137,7 @@ environmentalDiscomfort = Scenario(
 expressDesire = Scenario(
     intent='욕구표출',
     api=DiscomfortAnswerer().expressDesire_check_form,
+    emotion_answerer=answerer,
     scenario={
     }
 )
@@ -132,6 +145,7 @@ expressDesire = Scenario(
 foodDiscomfort = Scenario(
     intent='음식불편호소',
     api=DiscomfortAnswerer().foodDiscomfort_check_form,
+    emotion_answerer=answerer,
     scenario={
         'FOOD': []
     }
@@ -139,7 +153,8 @@ foodDiscomfort = Scenario(
 
 sentimentDiscomfort = Scenario(
     intent='마음상태호소',
-    api=EmotionAnswerer().generate_answer_collection,
+    api=answerer.generate_answer_collection,
+    emotion_answerer=answerer,
     scenario={
         'EMOTION': [],
         'PRE_EMOTION': [None],

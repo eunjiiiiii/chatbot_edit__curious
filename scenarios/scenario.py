@@ -31,7 +31,7 @@ class Scenario:
     시나리오를 구분하고, 알맞은 답변을 answer에 저장한다.
     """
 
-    def __init__(self, intent, api, scenario=None):
+    def __init__(self, intent, api, emotion_answerer, scenario=None):
         self.intent = intent
         self.scenario, self.default = \
             self.__make_empty_dict(scenario)
@@ -39,7 +39,9 @@ class Scenario:
         self.api, self.dict_keys, self.params = \
             self.__check_api(api)
 
-        self.emotion_answerer = EmotionAnswerer()
+        self.emotion_answerer = emotion_answerer
+
+        # self.emotion_answerer = EmotionAnswerer()
 
     def __check_api(self, api):
 
