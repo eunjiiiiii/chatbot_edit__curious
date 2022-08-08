@@ -1,11 +1,13 @@
 import torch.nn as nn
-from kogpt2_transformers import get_kogpt2_model
+# from kogpt2_transformers import get_kogpt2_model
+from transformers import GPT2LMHeadModel, AutoConfig
 
 
 class DialogKoGPT2(nn.Module):
   def __init__(self):
     super(DialogKoGPT2, self).__init__()
-    self.kogpt2 = get_kogpt2_model()
+    config = AutoConfig.from_pretrained("taeminlee/kogpt2")
+    self.kogpt2 = GPT2LMHeadModel(config)
 
   def generate(self,
                input_ids,

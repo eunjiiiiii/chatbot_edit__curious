@@ -25,9 +25,11 @@ class EmotionAnswerer(BaseAnswerer):
         self.device = torch.device(ctx)
 
         # 저장한 Checkpoint 불러오기
-        self.checkpoint = torch.load(self.save_ckpt_path, map_location=self.device)
+        # self.checkpoint = torch.load(self.save_ckpt_path, map_location=self.device)
+        # self.checkpoint = torch.load(self.save_ckpt_path, map_location='cpu')
         self.model = DialogKoGPT2()
-        self.model.load_state_dict(self.checkpoint['model_state_dict'])
+        self.model.load_state_dict(torch.load(self.save_ckpt_path, map_location=self.device)['model_state_dict'])
+        self.tokenizer = get_kogpt2_tokenizer()
 
         self.model.eval()
 
@@ -36,23 +38,23 @@ class EmotionAnswerer(BaseAnswerer):
         if max_emotion_prob < config.EMOTION['threshold'] and turn_cnt < 4:
             # 1. 감정이 명확히 분류되지 않은 경우 & turn 수 5회 미만
 
-            tokenizer = get_kogpt2_tokenizer()
+            # tokenizer = get_kogpt2_tokenizer()
 
             output_size = 200  # 출력하고자 하는 토큰 갯수
             # fill_slot = False
 
             # for i in range(5):
             sent = text  # ex) '요즘 기분이 우울한 느낌이에요'
-            tokenized_indexs = tokenizer.encode(sent)
+            tokenized_indexs = self.tokenizer.encode(sent)
 
             input_ids = torch.tensor(
-                [tokenizer.bos_token_id, ] + tokenized_indexs + [tokenizer.eos_token_id]).unsqueeze(0)
+                [self.tokenizer.bos_token_id, ] + tokenized_indexs + [self.tokenizer.eos_token_id]).unsqueeze(0)
             # set top_k to 50
             # 답변 생성
             sample_output = self.model.generate(input_ids=input_ids)
 
-            msg_decode = tokenizer.decode(sample_output[0].tolist()[len(tokenized_indexs) + 1:],
-                                          skip_special_tokens=True)
+            msg_decode = self.tokenizer.decode(sample_output[0].tolist()[len(tokenized_indexs) + 1:],
+                                               skip_special_tokens=True)
 
             # 문장 자르기(문장 2개까지만 나오게)
 
@@ -89,23 +91,23 @@ class EmotionAnswerer(BaseAnswerer):
 
         elif max_emotion_prob > config.EMOTION['threshold'] and turn_cnt <= 1:
             # 3. 감정-주제가 명확히 분류되고 turn_cnt <= 1 인 경우
-            tokenizer = get_kogpt2_tokenizer()
+            # tokenizer = get_kogpt2_tokenizer()
 
             output_size = 200  # 출력하고자 하는 토큰 갯수
             # fill_slot = False
 
             # for i in range(5):
             sent = text  # ex) '요즘 기분이 우울한 느낌이에요'
-            tokenized_indexs = tokenizer.encode(sent)
+            tokenized_indexs = self.tokenizer.encode(sent)
 
             input_ids = torch.tensor(
-                [tokenizer.bos_token_id, ] + tokenized_indexs + [tokenizer.eos_token_id]).unsqueeze(0)
+                [self.tokenizer.bos_token_id, ] + tokenized_indexs + [self.tokenizer.eos_token_id]).unsqueeze(0)
             # set top_k to 50
             # 답변 생성
             sample_output = self.model.generate(input_ids=input_ids)
 
-            msg_decode = tokenizer.decode(sample_output[0].tolist()[len(tokenized_indexs) + 1:],
-                                          skip_special_tokens=True)
+            msg_decode = self.tokenizer.decode(sample_output[0].tolist()[len(tokenized_indexs) + 1:],
+                                               skip_special_tokens=True)
 
             # 문장 자르기(문장 2개까지만 나오게)
 
@@ -142,23 +144,23 @@ class EmotionAnswerer(BaseAnswerer):
         :param emotion: 감정-주제 분류 모델의 return값(6가지 감정 + None(threshold 만족 X)
         :return: chatbot response
         """
-        tokenizer = get_kogpt2_tokenizer()
+        # tokenizer = get_kogpt2_tokenizer()
 
         output_size = 200  # 출력하고자 하는 토큰 갯수
         # fill_slot = False
 
         # for i in range(5):
         sent = text  # ex) '요즘 기분이 우울한 느낌이에요'
-        tokenized_indexs = tokenizer.encode(sent)
+        tokenized_indexs = self.tokenizer.encode(sent)
 
         input_ids = torch.tensor(
-            [tokenizer.bos_token_id, ] + tokenized_indexs + [tokenizer.eos_token_id]).unsqueeze(0)
+            [self.tokenizer.bos_token_id, ] + tokenized_indexs + [self.tokenizer.eos_token_id]).unsqueeze(0)
         # set top_k to 50
         # 답변 생성
         sample_output = self.model.generate(input_ids=input_ids)
 
-        msg_decode = tokenizer.decode(sample_output[0].tolist()[len(tokenized_indexs) + 1:],
-                               skip_special_tokens=True)
+        msg_decode = self.tokenizer.decode(sample_output[0].tolist()[len(tokenized_indexs) + 1:],
+                                           skip_special_tokens=True)
         print("(system msg) emotion_answerer > generate_answer_under5 함수 실행")
 
         # 문장 자르기(문장 2개까지만 나오게)
