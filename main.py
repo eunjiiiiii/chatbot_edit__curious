@@ -3,10 +3,6 @@ import torch
 import random
 import os
 import numpy as np
-from model.proc import DistanceClassifier, GensimEmbedder, EntityRecognizer, SoftmaxClassifier
-from data.dataset import Dataset
-from model import curious_intent, embed, curious_entity
-from model.loss import CenterLoss, CRFLoss
 
 '''
 import sys
@@ -27,23 +23,8 @@ def seed_everything(seed):
     torch.backends.cudnn.benchmark = False
 
 
-dataset = Dataset(ood=True)
-emb = GensimEmbedder(model=embed.FastText())
 
-clf = DistanceClassifier(
-    model=curious_intent.CNN(dataset.intent_dict),
-    loss=CenterLoss(dataset.intent_dict),
-)
-
-rcn = EntityRecognizer(
-    model=curious_entity.LSTM(dataset.entity_dict),
-    loss=CRFLoss(dataset.entity_dict)
-)
-
-emotionchat = EmotionChat(embed_processor=(emb, False),
-                          intent_classifier=(clf, False),
-                          entity_recognizer=(rcn, False),
-                          )
+emotionchat = EmotionChat()
 
 if __name__ == '__main__':
     # initialization

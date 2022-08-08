@@ -7,18 +7,16 @@ from model.textgeneration.predict import DialogKoGPT2
 from scenarios.default_scenario import dust, weather, physicalDiscomfort, sleepProblem, moveHelp, changePosture, \
     higieneAct, otherAct, environmentalDiscomfort, expressDesire, foodDiscomfort, sentimentDiscomfort
 from answerer.emotion_answerer import EmotionAnswerer
+from model.proc import DistanceClassifier, GensimEmbedder, EntityRecognizer
 from data.dataset import Dataset
-from model import curious_intent
-from model.proc import DistanceClassifier
-from model.loss import CenterLoss
+from model import curious_intent, embed, curious_entity
+from model.loss import CenterLoss, CRFLoss
+
 from scenarios.scenario import Scenario
 
 class EmotionChat:
 
-    def __init__(self,
-                 embed_processor,
-                 intent_classifier,
-                 entity_recognizer):
+    def __init__(self):
 
         """
         emotionChat 답변생성 클래스 입니다.
@@ -44,42 +42,35 @@ class EmotionChat:
         '''
 
         self.dataset = Dataset(ood=True)
-        self.scenario_manager = ScenarioManager()
+
         self.intent_entity_classifier = JointIntEnt("./model/intent_entity/jointbert_demo_model", no_cuda=True)
         self.emotion_recognizer = IAI_EMOTION
         self.topic_recognizer = IAI_TOPIC("./model/topic/model", no_cuda=True)
         self.response_generator = DialogKoGPT2()
-        self.curious_intent_classifier = DistanceClassifier(model=curious_intent.CNN(self.dataset.intent_dict), loss=CenterLoss(self.dataset.intent_dict),)
+        #self.curious_intent_classifier = DistanceClassifier(model=curious_intent.CNN(self.dataset.intent_dict),
+        #                                                    loss=CenterLoss(self.dataset.intent_dict))
+
+        dataset = Dataset(ood=True)
+        emb = GensimEmbedder(model=embed.FastText())
+
+        clf = DistanceClassifier(
+            model=curious_intent.CNN(dataset.intent_dict),
+            loss=CenterLoss(dataset.intent_dict),
+        )
+
+        rcn = EntityRecognizer(
+            model=curious_entity.LSTM(dataset.entity_dict),
+            loss=CRFLoss(dataset.entity_dict)
+        )
+
+        self.scenario_manager = ScenarioManager(embed_processor=(emb, False),
+                                                  intent_classifier=(clf, False),
+                                                  entity_recognizer=(rcn, False))
 
         self.scenarios = [weather, dust,
                           physicalDiscomfort, sleepProblem, moveHelp,
                           changePosture, higieneAct, otherAct,
                           environmentalDiscomfort, expressDesire, foodDiscomfort, sentimentDiscomfort]
-
-        self.embed_processor = embed_processor[0] \
-            if isinstance(embed_processor, tuple) \
-            else embed_processor
-
-        self.intent_classifier = intent_classifier[0] \
-            if isinstance(intent_classifier, tuple) \
-            else intent_classifier
-
-        self.entity_recognizer = entity_recognizer[0] \
-            if isinstance(entity_recognizer, tuple) \
-            else entity_recognizer
-
-        if isinstance(embed_processor, tuple) \
-                and len(embed_processor) == 2 and embed_processor[1] is True:
-            self.__fit_embed()
-
-        if isinstance(intent_classifier, tuple) \
-                and len(intent_classifier) == 2 and intent_classifier[1] is True:
-            self.__fit_intent()
-
-        if isinstance(entity_recognizer, tuple) \
-                and len(entity_recognizer) == 2 and entity_recognizer[1] is True:
-            self.__fit_entity()
-
 
         for scenario in self.scenarios:
             self.scenario_manager.add_scenario(scenario)
@@ -107,6 +98,7 @@ class EmotionChat:
         pre_topics = pre_result_dict['topics'] # 이전 단계까지의 누적 주제 리스트
         intent_turn_cnt = pre_result_dict['intent_turn_cnt']   # 이전 단계까지 이전 단계와 같은 인텐트 턴 횟수
         pre_entity = pre_result_dict['entity'] # 이전 entity 누적 리스트
+        pre_state = pre_result_dict['state']    # 이전 상태
         turn_cnt = turn_cnts['turn_cnt']
 
 
@@ -114,9 +106,12 @@ class EmotionChat:
         # 1. 불편함/궁금함 인식 ,감정인식/주제인식 일 경우 intent 인식하지 않음
         c_ucs = True    # 이전 단계에서 불,궁,감 대화에 들어왔는가?
         if pre_phase == '' and pre_intent not in (
-                config.SORT_INTENT['PHSICALDISCOMFORTnQURIOUS'] + config.SORT_INTENT['SENTIMENTDISCOMFORT']):
+                config.SORT_INTENT['PHISICALDISCOMFORTnQURIOUS'] + config.SORT_INTENT['SENTIMENTDISCOMFORT']):
             # 이전 단계가 불편함, 마음상태호소, 궁금함 X -> 인텐트 인식
             intent, entity_ = self.intent_entity_classifier(text)
+        elif 'REQUIRE_' in pre_state:
+            _, entity_ = self.intent_entity_classifier(text)
+            intent = pre_intent
         elif '/check_ucs' in pre_pred_phases:
             # 이전 단계의 예상 단계에 /check_ucs (재질의) 가 있을 경우 = 현재 예상 단계가 재질의일 경우
             intent, entity_ = self.intent_entity_classifier(text)
@@ -164,7 +159,7 @@ class EmotionChat:
                 'emotion': '',
                 'emotions': pre_emotions,
                 'emotion_prob': pre_emotion_prob,
-                'emotion_probs': [0.,0.,0.,0.,0.,0.],
+                'emotion_probs': [1., 1., 1., 1., 1., 1.],
                 #'topic': '',
                 'topics': pre_topics,
                 'topic_prob': pre_topic_prob,
@@ -188,7 +183,7 @@ class EmotionChat:
                 'emotion': '',
                 'emotions': pre_emotions,
                 'emotion_prob': pre_emotion_prob,
-                'emotion_probs': [0., 0., 0., 0., 0., 0.],
+                'emotion_probs': [1., 1., 1., 1., 1., 1.],
                 #'topic': '',
                 'topics': pre_topics,
                 'topic_prob': pre_topic_prob,
@@ -247,7 +242,7 @@ class EmotionChat:
                 'emotion': '',
                 'emotions': [],
                 'emotion_prob': [],
-                'emotion_probs': [0., 0., 0., 0., 0., 0.],
+                'emotion_probs': [1., 1., 1., 1., 1., 1.],
                 'topics': [],
                 'topic_prob': [],
                 'answer': '',
@@ -626,7 +621,7 @@ class EmotionChat:
             if pre_result_dict['intent'] == '만남인사' and result_dict['intent_turn_cnt'] <= 1:
                 # 만남인사 하고 딴소리 하는 경우 -> 1번까지만 봐줌
 
-                print("만남인사 대화 오류 들어옴")
+                print("만남인사 이후 대화 오류 들어옴")
 
                 #return result_dict
 
