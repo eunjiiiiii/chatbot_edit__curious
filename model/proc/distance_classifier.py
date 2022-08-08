@@ -48,6 +48,7 @@ class DistanceClassifier(IntentClassifier):
         :param calibrate: Calibrate 모드 여부
         :return: 분류 결과 (클래스) 리턴
         """
+        # scenariomanager에서 intent_classifier > predict 들어왔을 때 ㄱㅊ, but prep는 정의되지 않는다고 나옴
 
         self._load_model()
         self.model.eval()
