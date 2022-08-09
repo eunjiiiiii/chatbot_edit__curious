@@ -88,7 +88,7 @@ ANSWER = {
     'default_error_ucs': ['그러시군요. 기분은 어떠세요? 아니면 다른 불편하거나 궁금하신 점이 있으신가요?\n'],
     'default_error_end_n': ['그러시군요. 또 기분이 안 좋아지면 언제든 저에게 이야기해주세요\n'],
     'default_error_end_p': ['그러시군요. 또 기분 좋은 일 생기시면 언제든 저에게 이야기 들려주세요\n'],
-    # 'default_error_end': ['다음에 또 불러서 이야기 들려주세요.\n'],
+    'default_error_end': ['다음에 또 불러서 이야기 들려주세요.\n'],
     'default_contents': ['{HUMAN_NAME}님의 심리 상태를 이해했습니다\n마음을 다스릴 수 있는 좋은 글과 소리를\n제공해 드릴게요.\n'.format(HUMAN_NAME=human_name),
              '이거 보시고 마음이 좀 나아지셨으면 좋겠어요. \n이제 상담을 마무리 할 시간이네요.\n',
              '이만 작별인사 드릴게요. 다음에 또 이야기 들려주세요^^\n'],

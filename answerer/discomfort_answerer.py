@@ -55,7 +55,6 @@ class DiscomfortAnswerer:
 
         return msg
 
-
     '''
     def physicalDiscomfort_check_form(self, body: str) -> str:
         """

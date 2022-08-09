@@ -499,7 +499,7 @@ class Scenario:
 
                 result_dict['emotion'] = pre_result_dict['emotion']
                 result_dict['state'] = 'UNK'
-                result_dict['answer'] = '그러시군요. ' + config.ANSWER['default_error_end']
+                result_dict['answer'] = ['그러시군요. '] + config.ANSWER['default_error_end']
                 result_dict['previous_phase'] = pre_result_dict['current_phase']
                 result_dict['current_phase'] = '/end_phase'
                 result_dict['next_phase'] = ['/end_phase']
