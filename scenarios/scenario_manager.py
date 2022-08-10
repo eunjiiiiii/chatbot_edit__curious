@@ -56,7 +56,7 @@ class ScenarioManager:
             raise Exception('시나리오 객체만 입력 가능합니다.')
 
     def apply_scenario(self, pre_result_dict, result_dict, text, c_ucs, turn_cnt):
-        '''
+
         if result_dict['intent'] == '궁금함':
             # 현재 대화가 궁금함 대화일 경우
             print('(system msg) intent 궁금함 들어옴')
@@ -64,9 +64,9 @@ class ScenarioManager:
             intent = self.intent_classifier.predict(prep, calibrate=False)
             entity = self.entity_recognizer.predict(prep)
             print('(system msg) intent : ' + str(intent))
-            result_dict['intent'] = result_dict['intent'] + '_' + intent  # 궁금함_dust
+            result_dict['intent'] = intent  # 궁금함_dust
             result_dict['entity'] = entity
-        '''
+
 
         for scenario in self.scenarios:
             # default_scenario 에 있는 경우 default_scenario를 기본적으로 따르도록
@@ -157,14 +157,15 @@ class ScenarioManager:
                 # 이전 대화에서 불,궁,감 대화에 안들어왔으면
                 # 다른 인텐트 존재 가능
 
-                if result_dict['intent'] == '궁금함':
+                print('(system msg) scenario.intent ' + scenario.intent)
+                if (scenario.intent == result_dict['intent']) and (result_dict['intent'] in config.SORT_INTENT['QURIOUS']):
                     # 현재 대화가 궁금함 대화일 경우
-                    prep = self.dataset.load_predict(text, self.embed_processor)
-                    intent = self.intent_classifier.predict(prep, calibrate=False)
-                    entity = self.entity_recognizer.predict(prep)
-                    print('(system msg) intent : ' + str(intent))
-                    result_dict['intent'] = intent    # 궁금함_dust
-                    result_dict['entity'] = entity
+                    #prep = self.dataset.load_predict(text, self.embed_processor)
+                    #intent = self.intent_classifier.predict(prep, calibrate=False)
+                    #entity = self.entity_recognizer.predict(prep)
+                    #print('(system msg) intent : ' + str(intent))
+                    #result_dict['intent'] = intent    # 궁금함_dust
+                    #result_dict['entity'] = entity
                     return scenario.apply(pre_result_dict, result_dict)
 
 

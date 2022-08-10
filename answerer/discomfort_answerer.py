@@ -2,6 +2,7 @@ import emotionchat_config as config
 import re
 
 class DiscomfortAnswerer:
+
     def fill_slot(self, entity: list) -> str:
         """
         불,궁 대화일 때 slot filling 함수
@@ -108,7 +109,7 @@ class DiscomfortAnswerer:
         위생 활동 도움 요구 재질의 출력 포맷
         :return: 출력 메시지
         """
-        msg = ['위생활동을 요청하신거죠? \n']
+        msg = ['위생활동 도움을 요청하신거죠? \n']
         msg += config.ANSWER['call_caregiver']
 
         return msg
@@ -117,7 +118,7 @@ class DiscomfortAnswerer:
     def otherAct_check_form(self) -> str:
         """
         기타 활동 도움 요구 재질의 출력 포맷
-        :return: 출력 메시지
+        :return: 출력 메시지+
         """
         msg = ['제가 도와드릴까요? \n']
 
@@ -129,7 +130,10 @@ class DiscomfortAnswerer:
         :param place: 장소
         :return: 출력 메시지
         """
-        msg = [str(place + '의 환경이 불편하신거죠? \n')]
+
+        msg = []
+        if len(place) > 0:
+            msg = [str(place + '의 환경이 불편하신거죠? \n')]
         msg += config.ANSWER['call_caregiver']
 
         return msg
@@ -153,7 +157,6 @@ class DiscomfortAnswerer:
         msg += config.ANSWER['call_caregiver']
 
         return msg
-
 
     def discomfort_sol_form(self) -> str:
         """

@@ -409,7 +409,7 @@ class Scenario:
             result_dict['state'] = 'NEGATIVE'
             result_dict['answer'] = config.ANSWER['default_error_end_n']
             result_dict['previous_phase'] = pre_result_dict['current_phase']
-            result_dict['current_phase'] = '/check_ucs_positive'
+            result_dict['current_phase'] = '/end_phase'
             result_dict['next_phase'] = ['/end_phase']
 
             return result_dict
