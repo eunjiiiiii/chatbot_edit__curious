@@ -685,8 +685,7 @@ class EmotionChat:
                 '''
 
             elif (pre_result_dict['intent'] in ['마음상태호소', '부정', '긍정'] or
-                  result_dict['intent'] in ['마음상태호소', '부정', '긍정']) \
-                    and result_dict['emotion_prob'] < config.EMOTION['threshold']:
+                  result_dict['intent'] in ['마음상태호소', '부정', '긍정']) and result_dict['emotion_prob'][0] < config.EMOTION['threshold']:
                 # 대화 오류인데/ 이전까지의 대화가 감정대화이고, 현재 들어온 대화의 감정 확률이 threshold를 넘지 않았을 경우
                 if pre_result_dict['emotion'] == '':
                     # 이전에 확실한 감정이 없었을 경우

@@ -550,9 +550,7 @@ class Scenario:
                         # 3-1. 이전에 확실한 감정이 없었을 경우
 
                         result_dict['state'] = 'REQUIRE_CERTAIN_EMOTION'
-                        result_dict['answer'] = self.emotion_answerer.generate_answer_under5(text,
-                                                                                         result_dict['emotions'][0],
-                                                                                         result_dict['topics'][0])
+                        result_dict['answer'] = self.emotion_answerer.generate_answer_under5(text)
                         result_dict['previous_phase'] = pre_result_dict['current_phase']
                         result_dict['current_phase'] = '/generate_emotion_chat'
                         result_dict['next_phase'] = ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat',
@@ -651,9 +649,7 @@ class Scenario:
                         # 3-1. 이전에 확실한 감정이 없었을 경우
 
                         result_dict['state'] = 'REQUIRE_CERTAIN_EMOTION'
-                        result_dict['answer'] = self.emotion_answerer.generate_answer_under5(text,
-                                                                                         result_dict['emotions'][0],
-                                                                                         result_dict['topics'][0])
+                        result_dict['answer'] = self.emotion_answerer.generate_answer_under5(text)
                         result_dict['previous_phase'] = pre_result_dict['current_phase']
                         result_dict['current_phase'] = '/generate_emotion_chat'
                         result_dict['next_phase'] = ['/generate_emotion_chat', '/end_chat', '/recognize_emotion_chat',
